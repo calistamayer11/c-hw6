@@ -5,7 +5,6 @@
 //
 #include "ECRational.h"
 
-// Custom constructor
 template <class T>
 ECRational<T>::ECRational(const T &numeratorIn, const T &denominatorIn)
     : numerator(numeratorIn), denominator(denominatorIn)
@@ -16,12 +15,10 @@ ECRational<T>::ECRational(const T &numeratorIn, const T &denominatorIn)
     }
 }
 
-// Copy constructor
 template <class T>
 ECRational<T>::ECRational(const ECRational &other)
     : numerator(other.numerator), denominator(other.denominator) {}
 
-// Assignment operator
 template <class T>
 ECRational<T> &ECRational<T>::operator=(const ECRational &other)
 {
@@ -31,46 +28,6 @@ ECRational<T> &ECRational<T>::operator=(const ECRational &other)
         denominator = other.denominator;
     }
     return *this;
-}
-
-// Addition operator
-template <class T>
-ECRational<T> operator+(const ECRational<T> &lhs, const ECRational<T> &rhs)
-{
-    return ECRational<T>(
-        lhs.numerator * rhs.denominator + rhs.numerator * lhs.denominator,
-        lhs.denominator * rhs.denominator);
-}
-
-// Subtraction operator
-template <class T>
-ECRational<T> operator-(const ECRational<T> &lhs, const ECRational<T> &rhs)
-{
-    return ECRational<T>(
-        lhs.numerator * rhs.denominator - rhs.numerator * lhs.denominator,
-        lhs.denominator * rhs.denominator);
-}
-
-// Multiplication operator
-template <class T>
-ECRational<T> operator*(const ECRational<T> &lhs, const ECRational<T> &rhs)
-{
-    return ECRational<T>(
-        lhs.numerator * rhs.numerator,
-        lhs.denominator * rhs.denominator);
-}
-
-// Division operator
-template <class T>
-ECRational<T> operator/(const ECRational<T> &lhs, const ECRational<T> &rhs)
-{
-    if (rhs.numerator == T(0))
-    {
-        throw std::invalid_argument("Division by zero is not allowed.");
-    }
-    return ECRational<T>(
-        lhs.numerator * rhs.denominator,
-        lhs.denominator * rhs.numerator);
 }
 
 // Access numerator
@@ -87,6 +44,38 @@ T ECRational<T>::GetDenominator() const
     return denominator;
 }
 
-// Explicit instantiation for common types (optional, but can improve compilation speed)
-template class ECRational<int>;
-template class ECRational<double>;
+template <class T>
+ECRational<T> operator+(const ECRational<T> &lhs, const ECRational<T> &rhs)
+{
+    return ECRational<T>(
+        lhs.GetNumerator() * rhs.GetDenominator() + rhs.GetNumerator() * lhs.GetDenominator(),
+        lhs.GetDenominator() * rhs.GetDenominator());
+}
+
+template <class T>
+ECRational<T> operator-(const ECRational<T> &lhs, const ECRational<T> &rhs)
+{
+    return ECRational<T>(
+        lhs.GetNumerator() * rhs.GetDenominator() - rhs.GetNumerator() * lhs.GetDenominator(),
+        lhs.GetDenominator() * rhs.GetDenominator());
+}
+
+template <class T>
+ECRational<T> operator*(const ECRational<T> &lhs, const ECRational<T> &rhs)
+{
+    return ECRational<T>(
+        lhs.GetNumerator() * rhs.GetNumerator(),
+        lhs.GetDenominator() * rhs.GetDenominator());
+}
+
+template <class T>
+ECRational<T> operator/(const ECRational<T> &lhs, const ECRational<T> &rhs)
+{
+    if (rhs.GetNumerator() == T(0))
+    {
+        throw std::invalid_argument("Division by zero is not allowed.");
+    }
+    return ECRational<T>(
+        lhs.GetNumerator() * rhs.GetDenominator(),
+        lhs.GetDenominator() * rhs.GetNumerator());
+}
