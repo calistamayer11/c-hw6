@@ -29,7 +29,8 @@ public:
     ECPolynomial operator*(const ECPolynomial &rhs) const; // Multiply two polynomials
     ECPolynomial operator/(const ECPolynomial &rhs) const; // Divide two polynomials
     ECPolynomial operator%(const ECPolynomial &rhs) const; // Get the remainder of division
-    void Dump() const;                                     // Dump the polynomial for debugging
+
+    void Dump() const; // Dump the polynomial for debugging
 
 private:
     std::vector<double> coefficients; // Coefficients of the polynomial

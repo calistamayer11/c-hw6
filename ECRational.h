@@ -1,51 +1,71 @@
 #ifndef ECRational_h
 #define ECRational_h
 
-#include <stdexcept>      // For std::invalid_argument
-#include <iostream>       // For std::cout
-#include "ECPolynomial.h" // Ensure you include your polynomial class
-
+// #include <stdexcept>
+// #include <iostream>
+// #include "ECPolynomial.h"
 template <class T>
 class ECRational
 {
-public:
-    // Constructor with numerator and denominator
-    ECRational(const T &num, const T &denom);
-
-    // Single argument constructor (defaults denominator to 1)
-    ECRational(const T &num);
-
-    // Copy constructor
-    ECRational(const ECRational &other);
-
-    // Assignment operator
-    ECRational &operator=(const ECRational &other);
-
-    // Accessors
-    T GetNumerator() const;
-    T GetDenominator() const;
-
-    // Arithmetic operations
-    friend ECRational operator+(const ECRational &lhs, const ECRational &rhs);
-    friend ECRational operator-(const ECRational &lhs, const ECRational &rhs);
-    friend ECRational operator*(const ECRational &lhs, const ECRational &rhs);
-    friend ECRational operator/(const ECRational &lhs, const ECRational &rhs);
-
-    // Mixed type arithmetic with T
-    ECRational operator+(const T &rhs) const;
-    ECRational operator-(const T &rhs) const;
-    ECRational operator*(const T &rhs) const;
-    ECRational operator/(const T &rhs) const;
-
-    // T + ECRational<T>, T - ECRational<T>, etc.
-    friend ECRational operator+(const T &lhs, const ECRational &rhs);
-    friend ECRational operator-(const T &lhs, const ECRational &rhs);
-    friend ECRational operator*(const T &lhs, const ECRational &rhs);
-    friend ECRational operator/(const T &lhs, const ECRational &rhs);
-
 private:
     T numerator;
     T denominator;
+
+public:
+    ECRational() {}
+    // Constructor with numerator and denominator
+    ECRational(const T &numeratorIn, const T &denominatorIn)
+        : numerator(numeratorIn), denominator(denominatorIn) {}
+
+    // Single argument constructor
+    ECRational(const T &num) : numerator(num), denominator(1) {}
+
+    // Copy constructor
+    ECRational(const ECRational &other)
+        : numerator(other.numerator), denominator(other.denominator) {}
+
+    // Assignment operator
+    ECRational &operator=(const ECRational &other)
+    {
+        if (this != &other)
+        {
+            this->numerator = other.numerator;
+            this->denominator = other.denominator;
+        }
+        return *this;
+    }
+
+    // Accessors
+    const T GetNumerator() const { return numerator; }
+    const T GetDenominator() const { return denominator; }
+
+    friend ECRational operator+(const ECRational &lhs, const ECRational &rhs)
+    {
+
+        T num = lhs.GetNumerator() * rhs.GetDenominator() + rhs.GetNumerator() * lhs.GetDenominator();
+        T den = lhs.GetDenominator() * rhs.GetDenominator();
+        return ECRational(num / den);
+    }
+
+    friend ECRational operator-(const ECRational &lhs, const ECRational &rhs)
+    {
+        T num = lhs.GetNumerator() * rhs.GetDenominator() - rhs.GetNumerator() * lhs.GetDenominator();
+        T den = lhs.GetDenominator() * rhs.GetDenominator();
+        return ECRational(num / den);
+    }
+    friend ECRational operator*(const ECRational &lhs, const ECRational &rhs)
+    {
+
+        T num = lhs.GetNumerator() * rhs.GetNumerator();
+        T den = lhs.GetDenominator() * rhs.GetDenominator();
+        return ECRational(num / den);
+    }
+    friend ECRational operator/(const ECRational &lhs, const ECRational &rhs)
+    {
+        T num = lhs.GetNumerator() * rhs.GetDenominator();
+        T den = lhs.GetDenominator() * rhs.GetNumerator();
+        return ECRational(num / den);
+    }
 };
 
-#endif
+#endif // ECRational_h

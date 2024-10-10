@@ -4,22 +4,18 @@
 //
 //  Created by Yufeng Wu on 9/17/22.
 //
+
 #include "ECPolynomial.h"
 
-// Constructor for zero coefficients of a given degree
-// ECPolynomial::ECPolynomial(int degree)
-// {
-//     coefficients.resize(degree + 1, 0.0); // Initialize all coefficients to zero
-// }
+// Constructor for a constant polynomial
 ECPolynomial::ECPolynomial(int value)
 {
-    // Assuming you have an internal data structure for coefficients
-    // Example: std::vector<int> coefficients;
     coefficients.resize(1);  // For constant polynomial
     coefficients[0] = value; // Set the constant term
 }
 
 // Constructor that takes a list of coefficients
+
 ECPolynomial::ECPolynomial(const std::vector<double> &listCoeffsIn)
 {
     // Filter out trailing zeros and assign coefficients
@@ -39,16 +35,11 @@ ECPolynomial::ECPolynomial(const ECPolynomial &rhs)
 // Get the degree of the polynomial
 int ECPolynomial::GetDegree() const
 {
-    int degree = -1;
-    for (int i = coefficients.size() - 1; i >= 0; i--)
+    if (coefficients.empty())
     {
-        if (coefficients[i] != 0)
-        {
-            degree = i;
-            break;
-        }
+        return 0;
     }
-    return degree;
+    return coefficients.size() - 1; // The highest index is the degree
 }
 
 // Set the coefficient at a specific index
@@ -79,7 +70,6 @@ ECPolynomial ECPolynomial::Scale(double factor)
     {
         result[i] = coefficients[i] * factor;
     }
-
     return ECPolynomial(result);
 }
 
@@ -134,6 +124,7 @@ ECPolynomial ECPolynomial::operator/(const ECPolynomial &rhs) const
             remainder[i + degreeDiff] -= leadingCoeff * rhs.coefficients[i];
         }
 
+        // Remove trailing zeros
         while (!remainder.empty() && std::fabs(remainder.back()) < 1e-10)
         {
             remainder.pop_back();
@@ -158,6 +149,7 @@ ECPolynomial ECPolynomial::operator%(const ECPolynomial &rhs) const
             remainder[i + degreeDiff] -= leadingCoeff * rhs.coefficients[i];
         }
 
+        // Remove trailing zeros
         while (!remainder.empty() && std::fabs(remainder.back()) < 1e-10)
         {
             remainder.pop_back();
@@ -167,7 +159,6 @@ ECPolynomial ECPolynomial::operator%(const ECPolynomial &rhs) const
     return ECPolynomial(remainder);
 }
 
-// Dump the polynomial for debugging
 void ECPolynomial::Dump() const
 {
     std::ostringstream oss;
@@ -175,17 +166,15 @@ void ECPolynomial::Dump() const
 
     if (degree == -1)
     {
-        oss << "0";
+        oss << "0"; // Empty polynomial
     }
     else
     {
-        // bool firstTerm = true;
         std::cout << "Deg: " << GetDegree() << ":  ";
         for (int x = 0; x < coefficients.size(); ++x)
         {
             std::cout << coefficients[x] << " ";
         }
         std::cout << std::endl;
-        // std::cout << coefficients[coefficients.size() - 1] << std::endl;
     }
 }
