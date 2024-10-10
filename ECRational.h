@@ -1,8 +1,3 @@
-//
-//  ECRational.h
-//
-//  Created by Yufeng Wu on 1/7/23.
-//
 #ifndef ECRational_h
 #define ECRational_h
 
@@ -17,28 +12,36 @@ public:
     // Constructor with numerator and denominator
     ECRational(const T &num, const T &denom);
 
+    // Single argument constructor (defaults denominator to 1)
+    ECRational(const T &num);
+
     // Copy constructor
     ECRational(const ECRational &other);
 
     // Assignment operator
     ECRational &operator=(const ECRational &other);
 
+    // Accessors
     T GetNumerator() const;
-
     T GetDenominator() const;
 
-    //  templates needed for the ECRational<ECPolynomial> part?
-    template <class U>
-    friend ECRational<U> operator+(const ECRational<U> &lhs, const ECRational<U> &rhs);
+    // Arithmetic operations
+    friend ECRational operator+(const ECRational &lhs, const ECRational &rhs);
+    friend ECRational operator-(const ECRational &lhs, const ECRational &rhs);
+    friend ECRational operator*(const ECRational &lhs, const ECRational &rhs);
+    friend ECRational operator/(const ECRational &lhs, const ECRational &rhs);
 
-    template <class U>
-    friend ECRational<U> operator-(const ECRational<U> &lhs, const ECRational<U> &rhs);
+    // Mixed type arithmetic with T
+    ECRational operator+(const T &rhs) const;
+    ECRational operator-(const T &rhs) const;
+    ECRational operator*(const T &rhs) const;
+    ECRational operator/(const T &rhs) const;
 
-    template <class U>
-    friend ECRational<U> operator*(const ECRational<U> &lhs, const ECRational<U> &rhs);
-
-    template <class U>
-    friend ECRational<U> operator/(const ECRational<U> &lhs, const ECRational<U> &rhs);
+    // T + ECRational<T>, T - ECRational<T>, etc.
+    friend ECRational operator+(const T &lhs, const ECRational &rhs);
+    friend ECRational operator-(const T &lhs, const ECRational &rhs);
+    friend ECRational operator*(const T &lhs, const ECRational &rhs);
+    friend ECRational operator/(const T &lhs, const ECRational &rhs);
 
 private:
     T numerator;

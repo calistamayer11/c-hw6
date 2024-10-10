@@ -179,57 +179,13 @@ void ECPolynomial::Dump() const
     }
     else
     {
-        bool firstTerm = true;
-
-        for (int i = degree; i >= 0; --i)
+        // bool firstTerm = true;
+        std::cout << "Deg: " << GetDegree() << ":  ";
+        for (int x = 0; x < coefficients.size(); ++x)
         {
-            double coeff = coefficients[i];
-            if (fabs(coeff) > 1e-10)
-            {
-                if (!firstTerm)
-                {
-                    if (coeff > 0)
-                    {
-                        oss << " + ";
-                    }
-                    else
-                    {
-                        oss << " - ";
-                        coeff = -coeff;
-                    }
-                }
-
-                if (i == 0)
-                {
-                    oss << coeff;
-                }
-                else if (i == 1)
-                {
-                    if (coeff == 1)
-                    {
-                        oss << "x";
-                    }
-                    else
-                    {
-                        oss << coeff << "x";
-                    }
-                }
-                else
-                {
-                    if (coeff == 1)
-                    {
-                        oss << "x^" << i;
-                    }
-                    else
-                    {
-                        oss << coeff << "x^" << i;
-                    }
-                }
-
-                firstTerm = false;
-            }
+            std::cout << coefficients[x] << " ";
         }
+        std::cout << std::endl;
+        // std::cout << coefficients[coefficients.size() - 1] << std::endl;
     }
-
-    std::cout << oss.str() << std::endl;
 }
