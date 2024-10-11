@@ -47,12 +47,16 @@ void ECPolynomial::SetCoeffAt(size_t index, double value)
 {
     if (index >= coefficients.size())
     {
-        coefficients.resize(index + 1, 0.0);
+        coefficients.resize(index + 1, 0.0); // Resize and initialize new coefficients to 0
     }
     coefficients[index] = value;
+
+    while (!coefficients.empty() && fabs(coefficients.back()) < 1e-10)
+    {
+        coefficients.pop_back();
+    }
 }
 
-// Get the coefficient at a specific degree
 double ECPolynomial::GetCoeff(int degree) const
 {
     if (degree < 0 || degree >= coefficients.size())
@@ -73,7 +77,6 @@ ECPolynomial ECPolynomial::Scale(double factor)
     return ECPolynomial(result);
 }
 
-// Add two polynomials
 ECPolynomial ECPolynomial::operator+(const ECPolynomial &rhs) const
 {
     size_t maxSize = std::max(coefficients.size(), rhs.coefficients.size());
@@ -87,10 +90,15 @@ ECPolynomial ECPolynomial::operator+(const ECPolynomial &rhs) const
             result[i] += rhs.coefficients[i];
     }
 
+    // Remove trailing zeros from the result
+    while (!result.empty() && fabs(result.back()) < 1e-10)
+    {
+        result.pop_back();
+    }
+
     return ECPolynomial(result);
 }
 
-// Multiply two polynomials
 ECPolynomial ECPolynomial::operator*(const ECPolynomial &rhs) const
 {
     std::vector<double> result(coefficients.size() + rhs.coefficients.size() - 1, 0.0);
@@ -102,11 +110,14 @@ ECPolynomial ECPolynomial::operator*(const ECPolynomial &rhs) const
             result[i + j] += coefficients[i] * rhs.coefficients[j];
         }
     }
+    while (!result.empty() && fabs(result.back()) < 1e-10)
+    {
+        result.pop_back();
+    }
 
     return ECPolynomial(result);
 }
 
-// Divide two polynomials and return the quotient
 ECPolynomial ECPolynomial::operator/(const ECPolynomial &rhs) const
 {
     std::vector<double> quotient;
@@ -134,7 +145,6 @@ ECPolynomial ECPolynomial::operator/(const ECPolynomial &rhs) const
     return ECPolynomial(quotient);
 }
 
-// Get the remainder when dividing two polynomials
 ECPolynomial ECPolynomial::operator%(const ECPolynomial &rhs) const
 {
     std::vector<double> remainder = coefficients;
@@ -149,7 +159,6 @@ ECPolynomial ECPolynomial::operator%(const ECPolynomial &rhs) const
             remainder[i + degreeDiff] -= leadingCoeff * rhs.coefficients[i];
         }
 
-        // Remove trailing zeros
         while (!remainder.empty() && std::fabs(remainder.back()) < 1e-10)
         {
             remainder.pop_back();
